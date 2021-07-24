@@ -115,6 +115,7 @@ static HRESULT __stdcall present(IDirect3DDevice9* device, const RECT* src, cons
     Misc::spectatorList();
     Visuals::hitMarker(nullptr, ImGui::GetBackgroundDrawList());
     Visuals::drawMolotovHull(ImGui::GetBackgroundDrawList());
+    Visuals::drawSmokeTimer(ImGui::GetBackgroundDrawList());
     Misc::watermark();
 
     Aimbot::updateInput();
@@ -531,6 +532,7 @@ static void swapWindow(SDL_Window* window) noexcept
         Misc::spectatorList();
         Visuals::hitMarker(nullptr, ImGui::GetBackgroundDrawList());
         Visuals::drawMolotovHull(ImGui::GetBackgroundDrawList());
+        Visuals::drawSmokeTimer(ImGui::GetBackgroundDrawList());
         Misc::watermark();
 
         Aimbot::updateInput();
