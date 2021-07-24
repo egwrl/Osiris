@@ -24,7 +24,7 @@ fi
 sudo rm -rf /tmp/dumps # Remove if it exists
 sudo mkdir --mode=000 /tmp/dumps # Make it as root with no permissions
 
-filename="libLeet.so"
+filename="libOsiris.so"
 
 # Credit: Aixxe @ aixxe.net
 if grep -q "$filename" /proc/"$csgo_pid"/maps; then
@@ -71,4 +71,3 @@ if [ "$last_line" != "\$1 = (void *) 0x0" ]; then
 else
     echo_red "Injection failed, make sure you have compiled..."
 fi
-
