@@ -52,7 +52,7 @@
 #include "../GameData.h"
 
 #include "../imguiCustom.h"
-#include <Config.h>
+#include "../Config.h"
 
 struct MiscConfig {
     MiscConfig() { clanTag[0] = '\0'; }
