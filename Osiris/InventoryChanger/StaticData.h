@@ -6,6 +6,8 @@
 
 #include "../SDK/WeaponId.h"
 
+enum class TournamentTeam : std::uint8_t;
+
 namespace StaticData
 {
     constexpr auto InvalidItemIdx = static_cast<std::size_t>(-1);
@@ -67,26 +69,31 @@ namespace StaticData
     };
 
     struct PaintKit {
-        PaintKit(int id, std::wstring&& name, float wearRemapMin, float wearRemapMax) noexcept;
         PaintKit(int id, std::wstring&& name) noexcept;
+        PaintKit(int id, std::wstring&& name, float wearRemapMin, float wearRemapMax) noexcept;
+        PaintKit(int id, std::wstring&& name, std::uint32_t tournamentID, TournamentTeam tournamentTeam, int tournamentPlayerID, bool isGoldenSticker) noexcept;
 
         int id;
         float wearRemapMin = 0.0f;
         float wearRemapMax = 1.0f;
+        std::uint32_t tournamentID = 0;
+        TournamentTeam tournamentTeam{};
+        bool isGoldenSticker = false;
+        int tournamentPlayerID = 0;
         std::string name;
         std::wstring nameUpperCase;
     };
 
     enum class TournamentMap : std::uint8_t {
         None = 0,
-        Dust2,
-        Mirage,
-        Inferno,
-        Cobblestone,
-        Overpass,
         Cache,
-        Train,
+        Cobblestone,
+        Dust2,
+        Inferno,
+        Mirage,
         Nuke,
+        Overpass,
+        Train,
         Vertigo
     };
 
@@ -110,4 +117,9 @@ namespace StaticData
     const std::string& getWeaponName(WeaponId weaponID) noexcept;
 
     std::size_t getItemIndex(WeaponId weaponID, int paintKit) noexcept;
+
+    int findTournamentGoldSticker(std::uint32_t tournamentID, TournamentTeam team, int tournamentPlayerID) noexcept;
+    int findSouvenirTournamentSticker(std::uint32_t tournamentID) noexcept;
+    int getTournamentTeamGoldStickerID(std::uint32_t tournamentID, TournamentTeam team) noexcept;
+    int getTournamentPlayerGoldStickerID(std::uint32_t tournamentID, int tournamentPlayerID) noexcept;
 }

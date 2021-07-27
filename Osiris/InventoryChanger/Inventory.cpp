@@ -147,6 +147,8 @@ private:
                 econItem->setTournamentStage(static_cast<int>(dynamicData.tournamentStage));
                 econItem->setTournamentTeam1(static_cast<int>(dynamicData.tournamentTeam1));
                 econItem->setTournamentTeam2(static_cast<int>(dynamicData.tournamentTeam2));
+                if (dynamicData.proPlayer != ProPlayer{ 0 })
+                    econItem->setTournamentPlayer(static_cast<int>(dynamicData.proPlayer));
             }
 
             econItem->setWear(dynamicData.wear);
@@ -185,11 +187,13 @@ private:
                 econItem->setTournamentStage(static_cast<int>(dynamicData.tournamentStage));
                 econItem->setTournamentTeam1(static_cast<int>(dynamicData.tournamentTeam1));
                 econItem->setTournamentTeam2(static_cast<int>(dynamicData.tournamentTeam2));
+                if (dynamicData.proPlayer != ProPlayer{ 0 })
+                    econItem->setTournamentPlayer(static_cast<int>(dynamicData.proPlayer));
             }
         }
 
         baseTypeCache->addObject(econItem);
-        memory->addEconItem(localInventory, econItem, false, false, false);
+        localInventory->soCreated(localInventory->getSOID(), (SharedObject*)econItem, 4);
 
         if (const auto inventoryComponent = *memory->uiComponentInventory) {
             memory->setItemSessionPropertyValue(inventoryComponent, econItem->itemID, "recent", "0");
@@ -225,6 +229,7 @@ private:
         if (const auto baseTypeCache = localInventory->getItemBaseTypeCache())
             baseTypeCache->removeObject(econItem);
 
+        econItem->destructor();
         item->markAsDeleted();
     }
 
