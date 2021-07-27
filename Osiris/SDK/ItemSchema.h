@@ -282,6 +282,8 @@ enum class TournamentTeam : std::uint8_t {
     ESCGaming = 42,
     Flipsid3Tactics = 43,
     TeamEnVyUs = 46,
+    VexedGaming = 47,
+    TeamLiquid = 48,
     CounterLogicGaming = 49,
     KeydStars = 50,
     TeamSoloMidKinguin = 51,
@@ -291,7 +293,8 @@ enum class TournamentTeam : std::uint8_t {
     TeamKinguin = 55,
     TeamEBettle = 56,
     LuminosityGaming = 57,
-    TeamSoloMid = 58
+    TeamSoloMid = 58,
+    G2Esports = 59
 };
 
 enum class TournamentStage : std::uint8_t {
@@ -381,6 +384,19 @@ enum class ProPlayer {
     n0thing = 755286,
     freakazoid = 16883071,
     dennis = 108076825,
+    Furlan = 177495873,
+    NiKo = 81417650,
+    jkaem = 42442914,
+    EliGE = 106428011,
+    FugLy = 108760082,
+    Hiko = 2791,
+    AdreN = 46200979,
+    nitr0 = 35624002,
+    aizy = 90685224,
+    Kjaerbye = 59614824,
+    Pimp = 57742580,
+    tenzki = 37214922,
+    MSL = 24134891
 };
 
 class EconItem {
