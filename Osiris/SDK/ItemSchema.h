@@ -243,7 +243,7 @@ public:
     VIRTUAL_METHOD(ItemSchema*, getItemSchema, 0, (), (this))
 };
 
-enum class TournamentTeam : std::uint8_t {
+enum TournamentTeam : std::uint8_t {
     None = 0,
     NinjasInPyjamas = 1,
     AstanaDragons = 2,
@@ -294,17 +294,25 @@ enum class TournamentTeam : std::uint8_t {
     TeamEBettle = 56,
     LuminosityGaming = 57,
     TeamSoloMid = 58,
-    G2Esports = 59
+    G2Esports = 59,
+    Astralis = 60,
+    FaZeClan = 61,
+    Splyce = 62,
+    GambitEsports = 63,
+    AllStarTeamAmerica = 64,
+    AllStarTeamEurope = 65,
+    OpTicGaming = 66
 };
 
-enum class TournamentStage : std::uint8_t {
+enum TournamentStage : std::uint8_t {
     GroupStage = 2,
     Quarterfinal = 5,
     Semifinal = 8,
-    GrandFinal = 11
+    GrandFinal = 11,
+    AllStar = 14
 };
 
-enum class ProPlayer {
+enum ProPlayer {
     f0rest = 93724,
     allu = 1345246,
     friberg = 24295201,
@@ -396,7 +404,36 @@ enum class ProPlayer {
     Kjaerbye = 59614824,
     Pimp = 57742580,
     tenzki = 37214922,
-    MSL = 24134891
+    MSL = 24134891,
+    Shara = 53330928,
+    THREAT = 158900,
+    fnx = 170178574,
+    TACO = 52876568,
+    adreN = 1366033,
+    s1mple = 73936547,
+    DAVEY = 100534297,
+    Professor_Chaos = 2029235,
+    arya = 411777,
+    abE = 25060851,
+    jasonR = 24868593,
+    DEVIL = 44238623,
+    mou = 52678767,
+    Dosia = 146641530,
+    hooch = 5809933,
+    wayLander = 38340970,
+    k0nfig = 19403447,
+    RUBINO = 35103983,
+    gla1ve = 50245293,
+    pita = 26459,
+    koosta = 161590,
+    spaze = 109497526,
+    RUSH = 63326592,
+    mixwell = 27224124,
+    daps = 19892353,
+    NAF = 40885967,
+    stanislaw = 21583315,
+    pyth = 57312567,
+    bodyy = 53029647
 };
 
 class EconItem {

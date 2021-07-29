@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 
+#include "../SDK/ItemSchema.h"
 #include "StaticData.h"
 
 enum class Team;
@@ -14,9 +15,9 @@ struct StickerConfig {
     float wear = 0.0f;
 };
 
-enum class TournamentTeam : std::uint8_t;
-enum class TournamentStage : std::uint8_t;
-enum class ProPlayer;
+enum TournamentTeam : std::uint8_t;
+enum TournamentStage : std::uint8_t;
+enum ProPlayer;
 
 struct DynamicSkinData {
     float wear = 0.0f;
