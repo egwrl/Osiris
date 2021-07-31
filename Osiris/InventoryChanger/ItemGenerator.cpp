@@ -622,6 +622,58 @@ constexpr auto pglKrakow2017Matches = std::to_array<Match>({
 });
 static_assert(std::ranges::is_sorted(pglKrakow2017Matches, {}, &Match::map));
 
+constexpr auto eleagueBoston2018Matches = std::to_array<Match>({
+    // Challengers Stage
+
+    // Round 1
+    { TournamentMap::Mirage, ChallengersStage, VegaSquadron, Renegades, {} },
+    { TournamentMap::Mirage, ChallengersStage, Avangar, Mousesports, {} },
+    { TournamentMap::Overpass, ChallengersStage, TeamLiquid, FaZeClan, {} },
+    { TournamentMap::Overpass, ChallengersStage, Flipsid3Tactics, MisfitsGaming, {} },
+    { TournamentMap::Cobblestone, ChallengersStage, SproutEsports, SpaceSoldiers, {} },
+    { TournamentMap::Inferno, ChallengersStage, QuantumBellatorFire, NatusVincere, {} },
+    { TournamentMap::Inferno, ChallengersStage, G2Esports, FlashGaming, {} },
+    { TournamentMap::Cache, ChallengersStage, Cloud9, TeamEnVyUs, {} },
+
+    // Round 2
+    { TournamentMap::Mirage, ChallengersStage, Mousesports, NatusVincere, {} },
+    { TournamentMap::Inferno, ChallengersStage, Cloud9, SproutEsports, {} },
+    { TournamentMap::Inferno, ChallengersStage, VegaSquadron, FaZeClan, {} },
+    { TournamentMap::Cobblestone, ChallengersStage, G2Esports, MisfitsGaming, {} },
+    { TournamentMap::Cobblestone, ChallengersStage, TeamLiquid, Flipsid3Tactics, {} },
+    { TournamentMap::Mirage, ChallengersStage, Avangar, SpaceSoldiers, {} },
+    { TournamentMap::Cache, ChallengersStage, TeamEnVyUs, Renegades, {} },
+    { TournamentMap::Inferno, ChallengersStage, FlashGaming, QuantumBellatorFire, {} },
+
+    // Round 3
+    { TournamentMap::Overpass, ChallengersStage, G2Esports, VegaSquadron, {} },
+    { TournamentMap::Train, ChallengersStage, Cloud9, Mousesports, {} },
+    { TournamentMap::Mirage, ChallengersStage, FaZeClan, QuantumBellatorFire, {} },
+    { TournamentMap::Train, ChallengersStage, SpaceSoldiers, MisfitsGaming, {} },
+    { TournamentMap::Mirage, ChallengersStage, NatusVincere, SproutEsports, {} },
+    { TournamentMap::Cobblestone, ChallengersStage, TeamLiquid, Renegades, {} },
+    { TournamentMap::Inferno, ChallengersStage, FlashGaming, TeamEnVyUs, {} },
+    { TournamentMap::Train, ChallengersStage, Avangar, Flipsid3Tactics, {} },
+
+    // Round 4
+    { TournamentMap::Mirage, ChallengersStage, TeamLiquid, VegaSquadron, {} },
+    { TournamentMap::Train, ChallengersStage, NatusVincere, FaZeClan, {} },
+    { TournamentMap::Mirage, ChallengersStage, Mousesports, SpaceSoldiers, {} },
+    { TournamentMap::Cache, ChallengersStage, MisfitsGaming, Avangar, {} },
+    { TournamentMap::Cobblestone, ChallengersStage, SproutEsports, Renegades, {} },
+    { TournamentMap::Inferno, ChallengersStage, QuantumBellatorFire, TeamEnVyUs, {} },
+
+    // Round 5
+    { TournamentMap::Mirage, ChallengersStage, Renegades, Mousesports, {} },
+    { TournamentMap::Train, ChallengersStage, QuantumBellatorFire, Avangar, {} },
+    { TournamentMap::Inferno, ChallengersStage, NatusVincere, TeamLiquid, {} },
+
+    // 100 Thieves replacement
+    { TournamentMap::Mirage, ChallengersStage, Avangar, Renegades, {} },
+    { TournamentMap::Mirage, ChallengersStage, TeamLiquid, Avangar, {} },
+
+});
+
 constexpr auto tournaments = std::to_array<Tournament>({
     { 1, dreamHack2013Matches },
     { 3, emsOneKatowice2014Matches },
@@ -634,6 +686,7 @@ constexpr auto tournaments = std::to_array<Tournament>({
     { 10, eslOneCologne2016Matches },
     { 11, eleagueAtlanta2017Matches },
     { 12, pglKrakow2017Matches },
+    { 13, eleagueBoston2018Matches },
 });
 
 static_assert(std::ranges::is_sorted(tournaments, {}, &Tournament::tournamentID));

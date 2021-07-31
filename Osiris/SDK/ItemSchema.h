@@ -307,6 +307,14 @@ enum TournamentTeam : std::uint8_t {
     BIG = 69,
     VegaSquadron = 70,
     Immortals = 71,
+    SproutEsports = 72,
+    SpaceSoldiers = 73,
+    Tyloo = 74,
+    Avangar = 75,
+    QuantumBellatorFire = 76,
+    MisfitsGaming = 77,
+    _100Thieves = 78,
+    FlashGaming = 79
 };
 
 enum TournamentStage : std::uint8_t {
@@ -314,7 +322,8 @@ enum TournamentStage : std::uint8_t {
     Quarterfinal = 5,
     Semifinal = 8,
     GrandFinal = 11,
-    AllStar = 14
+    AllStar = 14,
+    ChallengersStage = 27
 };
 
 enum ProPlayer {
