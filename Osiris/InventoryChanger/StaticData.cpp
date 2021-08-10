@@ -9,7 +9,9 @@
 #include "../SDK/ItemSchema.h"
 #include "../SDK/Localize.h"
 
-using namespace StaticData;
+using StaticData::TournamentMap;
+using StaticData::InvalidItemIdx;
+using StaticData::Type;
 
 constexpr auto operator<=>(WeaponId a, WeaponId b) noexcept
 {
@@ -180,8 +182,7 @@ private:
 
     void initMusicData(ItemSchema* itemSchema) noexcept
     {
-        const auto& musicMap = itemSchema->musicKits;
-        for (const auto& node : musicMap) {
+        for (const auto& node : itemSchema->musicKits) {
             const auto musicKit = node.value;
             if (musicKit->id == 1 || musicKit->id == 2)
                 continue;
@@ -205,13 +206,16 @@ private:
                 continue;
 
             const auto rarity = item->getRarity();
-            const auto weaponID = item->getWeaponId();
 
-            if (itemTypeName == "#CSGO_Type_Knife" && rarity == 6) {
+            if (const auto weaponID = item->getWeaponId(); itemTypeName == "#CSGO_Type_Knife" && rarity == 6) {
                 _gameItems.emplace_back(Type::Skin, 6, weaponID, vanillaPaintIndex, inventoryImage);
             } else if (isCollectible) {
-                _collectibles.emplace_back(isOriginal);
-                _gameItems.emplace_back(Type::Collectible, rarity, weaponID, _collectibles.size() - 1, inventoryImage);
+                if (item->isServiceMedal()) {
+                    _gameItems.emplace_back(Type::ServiceMedal, rarity, weaponID, 0, inventoryImage);
+                } else {
+                    _collectibles.emplace_back(isOriginal);
+                    _gameItems.emplace_back(Type::Collectible, rarity, weaponID, _collectibles.size() - 1, inventoryImage);
+                }
             } else if (itemTypeName == "#CSGO_Tool_Name_TagTag") {
                 _gameItems.emplace_back(Type::NameTag, rarity, weaponID, 0, inventoryImage);
             } else if (item->isPatchable()) {
@@ -222,7 +226,7 @@ private:
                     continue;
 
                 lootListIndices.push_back(lootListIdx);
-                Case caseData;
+                StaticData::Case caseData;
                 caseData.souvenirPackageTournamentID = item->getTournamentEventID();
                 _cases.push_back(std::move(caseData));
                 _gameItems.emplace_back(Type::Case, rarity, weaponID, _cases.size() - 1, inventoryImage);
@@ -262,18 +266,18 @@ private:
     auto findItems(WeaponId weaponID) const noexcept
     {
         struct Comp {
-            explicit Comp(const std::vector<GameItem>& gameItems) : gameItems{ gameItems } {}
+            explicit Comp(const std::vector<StaticData::GameItem>& gameItems) : gameItems{ gameItems } {}
             bool operator()(WeaponId weaponID, std::size_t index) const noexcept { return weaponID < gameItems[index].weaponID; }
             bool operator()(std::size_t index, WeaponId weaponID) const noexcept { return gameItems[index].weaponID < weaponID; }
         private:
-            const std::vector<GameItem>& gameItems;
+            const std::vector<StaticData::GameItem>& gameItems;
         };
 
         assert(!_itemsSorted.empty());
         return std::equal_range(_itemsSorted.cbegin(), _itemsSorted.cend(), weaponID, Comp{ _gameItems }); // not using std::ranges::equal_range() here because clang 12 on linux doesn't support it yet
     }
 
-    std::size_t getItemIndex(WeaponId weaponID, int paintKit) const noexcept
+    [[nodiscard]] std::size_t getItemIndex(WeaponId weaponID, int paintKit) const noexcept
     {
         const auto [begin, end] = findItems(weaponID);
         if (const auto it = std::lower_bound(begin, end, paintKit, [this](std::size_t index, int paintKit) { return _gameItems[index].hasPaintKit() && _paintKits[_gameItems[index].dataIndex].id < paintKit; }); it != end && _gameItems[*it].weaponID == weaponID && (!_gameItems[*it].hasPaintKit() || _paintKits[_gameItems[*it].dataIndex].id == paintKit))
@@ -281,7 +285,7 @@ private:
         return InvalidItemIdx;
     }
 
-    void fillLootFromLootList(ItemSchema* itemSchema, EconLootListDefinition* lootList, std::vector<std::size_t>& loot, bool* willProduceStatTrak = nullptr) noexcept
+    void fillLootFromLootList(ItemSchema* itemSchema, EconLootListDefinition* lootList, std::vector<std::size_t>& loot, bool* willProduceStatTrak = nullptr) const noexcept
     {
         if (willProduceStatTrak)
             *willProduceStatTrak = *willProduceStatTrak || lootList->willProduceStatTrak();
@@ -309,7 +313,7 @@ private:
     }
 
     // a few loot lists aren't present in client item schema, so we need to provide them ourselves
-    void rebuildMissingLootList(ItemSchema* itemSchema, int lootListID, std::vector<std::size_t>& loot) noexcept
+    void rebuildMissingLootList(ItemSchema* itemSchema, int lootListID, std::vector<std::size_t>& loot) const noexcept
     {
         if (lootListID == 292) { // crate_xray_p250_lootlist
             if (const auto idx = getItemIndex(WeaponId::P250, 125 /* cu_xray_p250 */); idx != InvalidItemIdx)
@@ -323,7 +327,7 @@ private:
         }
     }
 
-    TournamentMap getTournamentMapOfSouvenirPackage(std::string_view lootListName) const noexcept
+    static TournamentMap getTournamentMapOfSouvenirPackage(std::string_view lootListName) noexcept
     {
         if (lootListName.ends_with("de_dust2"))
             return TournamentMap::Dust2;
@@ -451,9 +455,9 @@ private:
         _paintKits.shrink_to_fit();
     }
 
-    std::vector<GameItem> _gameItems;
-    std::vector<Collectible> _collectibles;
-    std::vector<Case> _cases;
+    std::vector<StaticData::GameItem> _gameItems;
+    std::vector<StaticData::Collectible> _collectibles;
+    std::vector<StaticData::Case> _cases;
     std::vector<std::size_t> _caseLoot;
     std::vector<std::size_t> _itemsSorted;
     std::vector<std::size_t> _tournamentStickersSorted;
@@ -463,17 +467,17 @@ private:
     std::unordered_map<WeaponId, std::wstring> _weaponNamesUpper;
 };
 
-const std::vector<GameItem>& StaticData::gameItems() noexcept
+const std::vector<StaticData::GameItem>& StaticData::gameItems() noexcept
 {
     return StaticDataImpl::gameItems();
 }
 
-const std::vector<Collectible>& StaticData::collectibles() noexcept
+const std::vector<StaticData::Collectible>& StaticData::collectibles() noexcept
 {
     return StaticDataImpl::collectibles();
 }
 
-const std::vector<Case>& StaticData::cases() noexcept
+const std::vector<StaticData::Case>& StaticData::cases() noexcept
 {
     return StaticDataImpl::cases();
 }
