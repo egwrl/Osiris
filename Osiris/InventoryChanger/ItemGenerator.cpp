@@ -87,7 +87,7 @@ struct Match {
     {
         if (!hasMVPs())
             return ProPlayer{};
-        return mvpPlayers[Helpers::random(0, std::distance(mvpPlayers.begin(), std::ranges::find(mvpPlayers, ProPlayer{})) - 1)];
+        return mvpPlayers[Helpers::random(static_cast<std::size_t>(0), static_cast<std::size_t>(std::distance(mvpPlayers.begin(), std::ranges::find(mvpPlayers, ProPlayer{}))) - 1)];
     }
 };
 
@@ -935,7 +935,7 @@ constexpr auto operator<=>(TournamentMap a, TournamentMap b) noexcept
 
     if (const auto matches = getTournamentMatches(caseData.souvenirPackageTournamentID); !matches.empty()) {
         if (const auto matchesOnMap = filterMatchesToMap(matches, caseData.tournamentMap); !matchesOnMap.empty()) {
-            const auto& randomMatch = matchesOnMap[Helpers::random(0, matchesOnMap.size() - 1)];
+            const auto& randomMatch = matchesOnMap[Helpers::random(static_cast<std::size_t>(0), matchesOnMap.size() - 1)];
             dynamicData.tournamentStage = randomMatch.stage;
             dynamicData.tournamentTeam1 = randomMatch.team1;
             dynamicData.tournamentTeam2 = randomMatch.team2;

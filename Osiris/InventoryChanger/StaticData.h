@@ -65,12 +65,6 @@ namespace StaticData
         std::string iconPath;
     };
 
-    struct Collectible {
-        explicit Collectible(bool isOriginal) : isOriginal{ isOriginal } {}
-
-        bool isOriginal;
-    };
-
     struct PaintKit {
         PaintKit(int id, std::wstring&& name) noexcept;
         PaintKit(int id, std::wstring&& name, float wearRemapMin, float wearRemapMax) noexcept;
@@ -112,7 +106,6 @@ namespace StaticData
     };
 
     const std::vector<GameItem>& gameItems() noexcept;
-    [[deprecated("Use StaticData::isCollectibleGenuine() instead")]] const std::vector<Collectible>& collectibles() noexcept;
     const std::vector<Case>& cases() noexcept;
     const std::vector<std::size_t>& caseLoot() noexcept;
     const std::vector<PaintKit>& paintKits() noexcept;
