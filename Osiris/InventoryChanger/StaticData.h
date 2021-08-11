@@ -112,7 +112,7 @@ namespace StaticData
     };
 
     const std::vector<GameItem>& gameItems() noexcept;
-    const std::vector<Collectible>& collectibles() noexcept;
+    [[deprecated("Use StaticData::isCollectibleGenuine() instead")]] const std::vector<Collectible>& collectibles() noexcept;
     const std::vector<Case>& cases() noexcept;
     const std::vector<std::size_t>& caseLoot() noexcept;
     const std::vector<PaintKit>& paintKits() noexcept;
@@ -124,4 +124,6 @@ namespace StaticData
     int findSouvenirTournamentSticker(std::uint32_t tournamentID) noexcept;
     int getTournamentTeamGoldStickerID(std::uint32_t tournamentID, TournamentTeam team) noexcept;
     int getTournamentPlayerGoldStickerID(std::uint32_t tournamentID, int tournamentPlayerID) noexcept;
+    bool isCollectibleGenuine(const GameItem& collectible) noexcept;
+    std::uint16_t getServiceMedalYear(const GameItem& serviceMedal) noexcept;
 }

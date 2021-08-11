@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <cmath>
+#include <ctime>
 #include <random>
 #include <span>
 #include <vector>
@@ -823,6 +824,57 @@ constexpr auto iemKatowice2019Matches = std::to_array<Match>({
     { TournamentMap::Mirage, ChallengersStage, FURIA, NinjasInPyjamas, {} },
     { TournamentMap::Nuke, ChallengersStage, WinstrikeTeam, NRG, {} },
 
+    // Round 2
+    { TournamentMap::Overpass, ChallengersStage, Tyloo, Cloud9, {} },
+    { TournamentMap::Overpass, ChallengersStage, ENCE, G2Esports, {} },
+    { TournamentMap::Mirage, ChallengersStage, Renegades, NinjasInPyjamas, {} },
+    { TournamentMap::Overpass, ChallengersStage, ViCiGaming, NRG, {} },
+    { TournamentMap::Mirage, ChallengersStage, VegaSquadron, TeamSpirit, {} },
+    { TournamentMap::Nuke, ChallengersStage, GrayhoundGaming, Vitality, {} },
+    { TournamentMap::Mirage, ChallengersStage, FURIA, Avangar, {} },
+    { TournamentMap::Train, ChallengersStage, WinstrikeTeam, Fnatic, {} },
+
+    // Round 3
+    { TournamentMap::Nuke, ChallengersStage, Renegades, ENCE, {} },
+    { TournamentMap::Mirage, ChallengersStage, Renegades, ENCE, {} },
+
+    { TournamentMap::Inferno, ChallengersStage, NRG, Tyloo, {} },
+    { TournamentMap::Mirage, ChallengersStage, NRG, Tyloo, {} },
+
+    { TournamentMap::Overpass, ChallengersStage, G2Esports, Avangar, {} },
+    { TournamentMap::Overpass, ChallengersStage, Vitality, VegaSquadron, {} },
+    { TournamentMap::Inferno, ChallengersStage, Cloud9, ViCiGaming, {} },
+    { TournamentMap::Train, ChallengersStage, NinjasInPyjamas, WinstrikeTeam, {} },
+
+    { TournamentMap::Inferno, ChallengersStage, GrayhoundGaming, Fnatic, {} },
+    { TournamentMap::Overpass, ChallengersStage, Fnatic, GrayhoundGaming, {} },
+
+    { TournamentMap::Mirage, ChallengersStage, FURIA, TeamSpirit, {} },
+    { TournamentMap::Nuke, ChallengersStage, FURIA, TeamSpirit, {} },
+
+    // Round 4
+    { TournamentMap::Inferno, ChallengersStage, ViCiGaming, Vitality, {} },
+    { TournamentMap::Nuke, ChallengersStage, ViCiGaming, Vitality, {} },
+
+    { TournamentMap::Cache, ChallengersStage, Avangar, Tyloo, {} },
+    { TournamentMap::Inferno, ChallengersStage, Avangar, Tyloo, {} },
+
+    { TournamentMap::Dust2, ChallengersStage, ENCE, WinstrikeTeam, {} },
+    { TournamentMap::Mirage, ChallengersStage, ENCE, WinstrikeTeam, {} },
+    { TournamentMap::Train, ChallengersStage, ENCE, WinstrikeTeam, {} },
+
+    { TournamentMap::Overpass, ChallengersStage, NinjasInPyjamas, VegaSquadron, {} },
+    { TournamentMap::Train, ChallengersStage, NinjasInPyjamas, VegaSquadron, {} },
+    { TournamentMap::Mirage, ChallengersStage, NinjasInPyjamas, VegaSquadron, {} },
+
+    { TournamentMap::Mirage, ChallengersStage, G2Esports, Fnatic, {} },
+    { TournamentMap::Dust2, ChallengersStage, G2Esports, Fnatic, {} },
+    { TournamentMap::Overpass, ChallengersStage, G2Esports, Fnatic, {} },
+
+    { TournamentMap::Mirage, ChallengersStage, Cloud9, FURIA, {} },
+    { TournamentMap::Inferno, ChallengersStage, Cloud9, FURIA, {} },
+    { TournamentMap::Cache, ChallengersStage, Cloud9, FURIA, {} },
+
 });
 
 constexpr auto tournaments = std::to_array<Tournament>({
@@ -894,6 +946,43 @@ constexpr auto operator<=>(TournamentMap a, TournamentMap b) noexcept
     return dynamicData;
 }
 
+[[nodiscard]] static std::time_t tmToUTCTimestamp(std::tm& tm) noexcept
+{
+#ifdef _WIN32
+    return _mkgmtime(&tm);
+#else
+    return timegm(&tm);
+#endif
+}
+
+[[nodiscard]] static std::time_t getStartOfYearTimestamp(std::uint16_t year) noexcept
+{
+    assert(year >= 1900);
+    std::tm tm{};
+    tm.tm_mday = 1;
+    tm.tm_year = year - 1900;
+    return tmToUTCTimestamp(tm);
+}
+
+[[nodiscard]] static std::time_t getEndOfYearTimestamp(std::uint16_t year) noexcept
+{
+    assert(year >= 1900);
+    std::tm tm{};
+    tm.tm_sec = 59;
+    tm.tm_min = 59;
+    tm.tm_hour = 23;
+    tm.tm_mday = 31;
+    tm.tm_mon = 12 - 1;
+    tm.tm_year = year - 1900;
+    return tmToUTCTimestamp(tm);
+}
+
+[[nodiscard]] static std::uint32_t getRandomDateTimestampOfYear(std::uint16_t year) noexcept
+{
+    const auto now = std::time(nullptr);
+    return Helpers::random(static_cast<int>(std::min(getStartOfYearTimestamp(year), now)), static_cast<int>(std::min(getEndOfYearTimestamp(year), now)));
+}
+
 std::size_t ItemGenerator::createDefaultDynamicData(std::size_t gameItemIndex) noexcept
 {
     std::size_t index = Inventory::INVALID_DYNAMIC_DATA_IDX;
@@ -921,6 +1010,10 @@ std::size_t ItemGenerator::createDefaultDynamicData(std::size_t gameItemIndex) n
     } else if (item.isCase()) {
         if (const auto& staticData = StaticData::cases()[item.dataIndex]; staticData.isSouvenirPackage())
             index = Inventory::emplaceDynamicData(generateSouvenirPackageData(staticData));
+    } else if (item.isServiceMedal()) {
+        DynamicServiceMedalData dynamicData;
+        dynamicData.issueDateTimestamp = getRandomDateTimestampOfYear(StaticData::getServiceMedalYear(item));
+        index = Inventory::emplaceDynamicData(std::move(dynamicData));
     }
 
     return index;
