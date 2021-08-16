@@ -124,30 +124,6 @@ static void swapWindow(SDL_Window * window) noexcept
 #endif
     ImGui::NewFrame();
 
-<<<<<<< HEAD
-    StreamProofESP::render();
-    Misc::purchaseList();
-    Misc::noscopeCrosshair(ImGui::GetBackgroundDrawList());
-    Misc::recoilCrosshair(ImGui::GetBackgroundDrawList());
-    Misc::drawOffscreenEnemies(ImGui::GetBackgroundDrawList());
-    Misc::drawBombTimer();
-    Misc::spectatorList();
-    Visuals::hitMarker(nullptr, ImGui::GetBackgroundDrawList());
-    Visuals::drawMolotovHull(ImGui::GetBackgroundDrawList());
-    Visuals::drawSmokeTimer(ImGui::GetBackgroundDrawList());
-    Misc::watermark();
-    Misc::drawAimBotFOV(ImGui::GetBackgroundDrawList());
-
-    Aimbot::updateInput();
-    Visuals::updateInput();
-    StreamProofESP::updateInput();
-    Misc::updateInput();
-    Triggerbot::updateInput();
-    Chams::updateInput();
-    Glow::updateInput();
-
-    gui->handleToggle();
-=======
     if (const auto& displaySize = ImGui::GetIO().DisplaySize; displaySize.x > 0.0f && displaySize.y > 0.0f) {
         StreamProofESP::render();
         Misc::purchaseList();
@@ -159,7 +135,7 @@ static void swapWindow(SDL_Window * window) noexcept
         Visuals::hitMarker(nullptr, ImGui::GetBackgroundDrawList());
         Visuals::drawMolotovHull(ImGui::GetBackgroundDrawList());
         Misc::watermark();
->>>>>>> a283bf5d9683fb14d6aeb2f693358904596452da
+        Misc::drawAimBotFOV(ImGui::GetBackgroundDrawList());
 
         Aimbot::updateInput();
         Visuals::updateInput();
@@ -565,59 +541,6 @@ Hooks::Hooks(HMODULE moduleHandle) noexcept : moduleHandle{ moduleHandle }
     originalWndProc = WNDPROC(SetWindowLongPtrW(window, GWLP_WNDPROC, LONG_PTR(&wndProc)));
 }
 
-<<<<<<< HEAD
-#else
-
-static void swapWindow(SDL_Window* window) noexcept
-{
-    static const auto _ = ImGui_ImplSDL2_InitForOpenGL(window, nullptr);
-    
-    ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplSDL2_NewFrame(window);
-
-    ImGui::NewFrame();
-
-    if (const auto& displaySize = ImGui::GetIO().DisplaySize; displaySize.x > 0.0f && displaySize.y > 0.0f) {
-        StreamProofESP::render();
-        Misc::purchaseList();
-        Misc::noscopeCrosshair(ImGui::GetBackgroundDrawList());
-        Misc::recoilCrosshair(ImGui::GetBackgroundDrawList());
-        Misc::drawOffscreenEnemies(ImGui::GetBackgroundDrawList());
-        Misc::drawBombTimer();
-        Misc::spectatorList();
-        Visuals::hitMarker(nullptr, ImGui::GetBackgroundDrawList());
-        Visuals::drawMolotovHull(ImGui::GetBackgroundDrawList());
-        Visuals::drawSmokeTimer(ImGui::GetBackgroundDrawList());
-        Misc::watermark();
-        Misc::drawAimBotFOV(ImGui::GetBackgroundDrawList());
-
-        Aimbot::updateInput();
-        Visuals::updateInput();
-        StreamProofESP::updateInput();
-        Misc::updateInput();
-        Triggerbot::updateInput();
-        Chams::updateInput();
-        Glow::updateInput();
-
-        gui->handleToggle();
-
-        if (gui->isOpen())
-            gui->render();
-    }
-
-    ImGui::EndFrame();
-    ImGui::Render();
-
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-    GameData::clearUnusedAvatars();
-    InventoryChanger::clearUnusedItemIconTextures();
-
-    hooks->swapWindow(window);
-}
-
-=======
->>>>>>> a283bf5d9683fb14d6aeb2f693358904596452da
 #endif
 
 void Hooks::install() noexcept
