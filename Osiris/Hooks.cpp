@@ -94,6 +94,17 @@ static LRESULT __stdcall wndProc(HWND window, UINT msg, WPARAM wParam, LPARAM lP
     return CallWindowProcW(hooks->originalWndProc, window, msg, wParam, lParam);
 }
 
+static HRESULT __stdcall reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* params) noexcept
+{
+    ImGui_ImplDX9_InvalidateDeviceObjects();
+    InventoryChanger::clearItemIconTextures();
+    GameData::clearTextures();
+    return hooks->originalReset(device, params);
+}
+
+#endif
+
+#ifdef _WIN32
 static HRESULT __stdcall present(IDirect3DDevice9* device, const RECT* src, const RECT* dest, HWND windowOverride, const RGNDATA* dirtyRegion) noexcept
 {
     [[maybe_unused]] static bool imguiInit{ ImGui_ImplDX9_Init(device) };
@@ -103,8 +114,17 @@ static HRESULT __stdcall present(IDirect3DDevice9* device, const RECT* src, cons
 
     ImGui_ImplDX9_NewFrame();
     ImGui_ImplWin32_NewFrame();
+#else
+static void swapWindow(SDL_Window * window) noexcept
+{
+    static const auto _ = ImGui_ImplSDL2_InitForOpenGL(window, nullptr);
+
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplSDL2_NewFrame(window);
+#endif
     ImGui::NewFrame();
 
+<<<<<<< HEAD
     StreamProofESP::render();
     Misc::purchaseList();
     Misc::noscopeCrosshair(ImGui::GetBackgroundDrawList());
@@ -127,33 +147,55 @@ static HRESULT __stdcall present(IDirect3DDevice9* device, const RECT* src, cons
     Glow::updateInput();
 
     gui->handleToggle();
+=======
+    if (const auto& displaySize = ImGui::GetIO().DisplaySize; displaySize.x > 0.0f && displaySize.y > 0.0f) {
+        StreamProofESP::render();
+        Misc::purchaseList();
+        Misc::noscopeCrosshair(ImGui::GetBackgroundDrawList());
+        Misc::recoilCrosshair(ImGui::GetBackgroundDrawList());
+        Misc::drawOffscreenEnemies(ImGui::GetBackgroundDrawList());
+        Misc::drawBombTimer();
+        Misc::spectatorList();
+        Visuals::hitMarker(nullptr, ImGui::GetBackgroundDrawList());
+        Visuals::drawMolotovHull(ImGui::GetBackgroundDrawList());
+        Misc::watermark();
+>>>>>>> a283bf5d9683fb14d6aeb2f693358904596452da
 
-    if (gui->isOpen())
-        gui->render();
+        Aimbot::updateInput();
+        Visuals::updateInput();
+        StreamProofESP::updateInput();
+        Misc::updateInput();
+        Triggerbot::updateInput();
+        Chams::updateInput();
+        Glow::updateInput();
+
+        gui->handleToggle();
+
+        if (gui->isOpen())
+            gui->render();
+    }
 
     ImGui::EndFrame();
     ImGui::Render();
 
+#ifdef _WIN32
     if (device->BeginScene() == D3D_OK) {
         ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
         device->EndScene();
     }
-    
+#else
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+#endif
+
     GameData::clearUnusedAvatars();
     InventoryChanger::clearUnusedItemIconTextures();
 
+#ifdef _WIN32
     return hooks->originalPresent(device, src, dest, windowOverride, dirtyRegion);
-}
-
-static HRESULT __stdcall reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* params) noexcept
-{
-    ImGui_ImplDX9_InvalidateDeviceObjects();
-    InventoryChanger::clearItemIconTextures();
-    GameData::clearTextures();
-    return hooks->originalReset(device, params);
-}
-
+#else
+    hooks->swapWindow(window);
 #endif
+}
 
 static bool __STDCALL createMove(LINUX_ARGS(void* thisptr,) float inputSampleTime, UserCmd* cmd) noexcept
 {
@@ -523,6 +565,7 @@ Hooks::Hooks(HMODULE moduleHandle) noexcept : moduleHandle{ moduleHandle }
     originalWndProc = WNDPROC(SetWindowLongPtrW(window, GWLP_WNDPROC, LONG_PTR(&wndProc)));
 }
 
+<<<<<<< HEAD
 #else
 
 static void swapWindow(SDL_Window* window) noexcept
@@ -573,6 +616,8 @@ static void swapWindow(SDL_Window* window) noexcept
     hooks->swapWindow(window);
 }
 
+=======
+>>>>>>> a283bf5d9683fb14d6aeb2f693358904596452da
 #endif
 
 void Hooks::install() noexcept
