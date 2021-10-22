@@ -389,6 +389,8 @@ private:
             return TournamentMap::Nuke;
         if (lootListName.ends_with("de_vertigo"))
             return TournamentMap::Vertigo;
+        if (lootListName.ends_with("de_ancient"))
+            return TournamentMap::Ancient;
         return TournamentMap::None;
     }
 
@@ -561,6 +563,20 @@ int StaticData::getTournamentTeamGoldStickerID(std::uint32_t tournamentID, Tourn
 int StaticData::getTournamentPlayerGoldStickerID(std::uint32_t tournamentID, int tournamentPlayerID) noexcept
 {
     return StaticDataImpl::instance().getTournamentPlayerGoldStickerID(tournamentID, tournamentPlayerID);
+}
+
+int StaticData::getTournamentMapGoldStickerID(TournamentMap map) noexcept
+{
+    switch (map) {
+    case TournamentMap::Ancient: return 1689;
+    case TournamentMap::Dust2: return 1690;
+    case TournamentMap::Inferno: return 1691;
+    case TournamentMap::Mirage: return 1692;
+    case TournamentMap::Nuke: return 1693;
+    case TournamentMap::Overpass: return 1694;
+    case TournamentMap::Vertigo: return 1695;
+    default: return 0;
+    }
 }
 
 bool StaticData::isCollectibleGenuine(const GameItem& collectible) noexcept
