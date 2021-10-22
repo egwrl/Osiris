@@ -222,7 +222,7 @@ private:
                 continue;
 
             const auto name = std::string_view{ stickerKit->name.data(), static_cast<std::size_t>(stickerKit->name.length - 1) };
-            const auto isPatch = name.starts_with("patch");
+            const auto isPatch = name.starts_with("patch") || name.starts_with("stockh2021_teampatch");
             const auto isGraffiti = !isPatch && (name.starts_with("spray") || name.ends_with("graffiti"));
             const auto isSticker = !isPatch && !isGraffiti;
             
@@ -458,10 +458,15 @@ private:
         return std::all_of(_caseLoot.begin() + caseData.lootBeginIdx, _caseLoot.begin() + caseData.lootEndIdx, [this](std::size_t itemIndex) { return _gameItems[itemIndex].isSticker(); });
     }
 
+    [[nodiscard]] bool isPatchPack(const StaticData::Case& caseData) const noexcept
+    {
+        return std::all_of(_caseLoot.begin() + caseData.lootBeginIdx, _caseLoot.begin() + caseData.lootEndIdx, [this](std::size_t itemIndex) { return _gameItems[itemIndex].isPatch(); });
+    }
+
     void excludeTournamentStickerCapsulesFromSouvenirPackages() noexcept
     {
         for (auto& crate : _cases) {
-            if (isStickerCapsule(crate))
+            if (isStickerCapsule(crate) || isPatchPack(crate))
                 crate.souvenirPackageTournamentID = 0;
         }
     }
