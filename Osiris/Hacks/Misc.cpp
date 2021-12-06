@@ -242,7 +242,7 @@ void Misc::slowwalk(UserCmd* cmd) noexcept
 
     const auto weaponData = activeWeapon->getWeaponData();
     if (!weaponData)
-        return
+        return;
 
     const float maxSpeed = (localPlayer->isScoped() ? weaponData->maxSpeedAlt : weaponData->maxSpeed) / 3;
 
