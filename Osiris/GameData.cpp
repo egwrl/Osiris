@@ -300,9 +300,9 @@ void LocalPlayerData::update() noexcept
 
     if (const auto activeWeapon = localPlayer->getActiveWeapon()) {
         inReload = activeWeapon->isInReload();
-        shooting = localPlayer->shotsFired() > 1;
         noScope = activeWeapon->isSniperRifle() && !localPlayer->isScoped();
         nextWeaponAttack = activeWeapon->nextPrimaryAttack();
+        shooting = activeWeapon->isPistol() ? !inReload && nextWeaponAttack > memory->globalVars->serverTime() : localPlayer->shotsFired() > 1;
     }
     fov = localPlayer->fov() ? localPlayer->fov() : localPlayer->defaultFov();
     handle = localPlayer->handle();
@@ -398,7 +398,7 @@ PlayerData::PlayerData(Entity* entity) noexcept : BaseData{ entity }, handle{ en
         constexpr auto rgbaDataSize = 4 * 32 * 32;
 
         PlayerAvatar playerAvatar;
-        playerAvatar.rgba = std::make_unique<std::uint8_t[]>(rgbaDataSize);
+        playerAvatar.rgba = std::unique_ptr<std::uint8_t[]>(new std::uint8_t[rgbaDataSize]);
         if (ctx->steamUtils->getImageRGBA(avatar, playerAvatar.rgba.get(), rgbaDataSize))
             playerAvatars[handle] = std::move(playerAvatar);
     }
